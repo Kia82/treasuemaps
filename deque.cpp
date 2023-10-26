@@ -4,14 +4,12 @@
  *
  */
 
-#include <vector>
-#include<stdexcept>
-
 template <class T>
 Deque<T>::Deque(){
-    n1 = 0;
-    n2 = 0;
 
+    data = vector<T>();
+    n1 = 0;
+    n2 = -1;
 }
 
 /**
@@ -37,23 +35,23 @@ void Deque<T>::pushR(T newItem)
 template <class T>
 T Deque<T>::popL()
 {
-
     T item = data[n1];
     n1++;
+    if(n2 - n1 < n1) { 
+        vector<T> new_data;
 
-    if (n1 > (n2 - n1)) {
-        vector<T> newData(n2 - n1);
-        for (int i = n1; i < n2; i++) {
-            newData[i - n1] = data[i];
+        for(int i = n1; i <= n2; i++) {
+            new_data.push_back(data[i]);
         }
-        data = newData;
-        n2 -= n1;
+        data = new_data; //  since data is held by value, deallocation will be done by complier?
+        // no need for free?
+        n2 = n2-n1;
         n1 = 0;
     }
 
     return item;
+    
 }
-
 /**
  * Removes the object at the right of the Deque, and returns it to the
  * caller.
@@ -63,16 +61,15 @@ T Deque<T>::popL()
 template <class T>
 T Deque<T>::popR()
 {
+       T item = data[n2];
     n2--;
-    T item = data[n2];
-
-    if (n1 > (n2 - n1)) {
-        vector<T> newData(n2 - n1);
-        for (int i = n1; i < n2; i++) {
-            newData[i - n1] = data[i];
+    if(n2 - n1 < n1) { 
+        vector<T> new_data;
+        for(int i = n1; i <= n2; i++) {
+            new_data.push_back(data[i]);
         }
-        data = newData;
-        n2 -= n1;
+        data = new_data; //  since data is held by value, deallocation will be done by complier? 
+        n2 = n2 - n1;
         n1 = 0;
     }
 
@@ -111,6 +108,5 @@ T Deque<T>::peekR()
 template <class T>
 bool Deque<T>::isEmpty() const
 {
-
-    return (n1 == n2);
+    return ((n2 - n1) <= -1); //expected for (n2-n1) be at least -1 or greater, added '<' for unexpected behavior
 }
