@@ -4,10 +4,13 @@
  *
  */
 
+#include <vector>
+#include<stdexcept>
+
 template <class T>
 Deque<T>::Deque(){
-
-/* YOUR CODE HERE! */
+    n1 = 0;
+    n2 = 0;
 
 }
 
@@ -19,9 +22,8 @@ Deque<T>::Deque(){
 template <class T>
 void Deque<T>::pushR(T newItem)
 {
-    /**
-     * @todo Your code here!
-     */
+    data.push_back(newItem);
+    n2++;
 }
 
 /**
@@ -35,10 +37,23 @@ void Deque<T>::pushR(T newItem)
 template <class T>
 T Deque<T>::popL()
 {
-    /**
-     * @todo Your code here! 
-     */
+
+    T item = data[n1];
+    n1++;
+
+    if (n1 > (n2 - n1)) {
+        vector<T> newData(n2 - n1);
+        for (int i = n1; i < n2; i++) {
+            newData[i - n1] = data[i];
+        }
+        data = newData;
+        n2 -= n1;
+        n1 = 0;
+    }
+
+    return item;
 }
+
 /**
  * Removes the object at the right of the Deque, and returns it to the
  * caller.
@@ -48,9 +63,20 @@ T Deque<T>::popL()
 template <class T>
 T Deque<T>::popR()
 {
-    /**
-     * @todo Your code here! You will need to replace the following line.
-     */
+    n2--;
+    T item = data[n2];
+
+    if (n1 > (n2 - n1)) {
+        vector<T> newData(n2 - n1);
+        for (int i = n1; i < n2; i++) {
+            newData[i - n1] = data[i];
+        }
+        data = newData;
+        n2 -= n1;
+        n1 = 0;
+    }
+
+    return item;
 }
 
 /**
@@ -62,9 +88,7 @@ T Deque<T>::popR()
 template <class T>
 T Deque<T>::peekL()
 {
-    /**
-     * @todo Your code here! 
-     */
+    return data[n1];
 }
 
 /**
@@ -76,9 +100,7 @@ T Deque<T>::peekL()
 template <class T>
 T Deque<T>::peekR()
 {
-    /**
-     * @todo Your code here! 
-     */
+    return data[n2];
 }
 
 /**
@@ -89,7 +111,6 @@ T Deque<T>::peekR()
 template <class T>
 bool Deque<T>::isEmpty() const
 {
-    /**
-     * @todo Your code here! 
-     */
+
+    return (n1 == n2);
 }
