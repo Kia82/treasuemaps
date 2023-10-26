@@ -41,7 +41,6 @@ T Deque<T>::popL()
     T item = data[n1];
     n1++;
 
-    // Check if resizing is needed
     if (n1 > (n2 - n1)) {
         vector<T> newData(n2 - n1);
         for (int i = n1; i < n2; i++) {
