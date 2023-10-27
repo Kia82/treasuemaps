@@ -19,9 +19,11 @@ Deque<T>::Deque(){
  */
 template <class T>
 void Deque<T>::pushR(T newItem)
-{
-    data.push_back(newItem);
-    n2++;
+{  
+        n2++;
+        data.push_back(newItem);
+        
+    
 }
 
 /**
@@ -71,6 +73,8 @@ T Deque<T>::popR()
         data = new_data; //  since data is held by value, deallocation will be done by complier? 
         n2 = n2 - n1;
         n1 = 0;
+    } else {
+        data.pop_back();
     }
 
     return item;

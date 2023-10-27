@@ -3,6 +3,7 @@
 #include "cs221util/catch.hpp"
 #include "stack.h"
 #include "queue.h"
+
 //using namespace cs221util;
 using namespace std;
 
@@ -110,4 +111,29 @@ TEST_CASE("deque::resizing refill") {
 }
 
 
+TEST_CASE("stack::big miscellaneous ops") { 
 
+    vector<int> expected;
+    vector<int> result;
+    Stack<int> inputStack;
+   
+
+    for(int i = 0; i < 10; i++) {
+        int r1 = (rand() % 4);
+       
+        expected.push_back(i);
+        inputStack.push(i);
+        int r2 = (rand() % 4);
+        if( r2 == r1) {
+         expected.pop_back();
+         inputStack.pop();
+        }
+    }
+
+    reverse(expected.begin(), expected.end());
+
+    for(unsigned int i = 0; i < expected.size(); i++){
+        result.push_back(inputStack.pop());
+    }
+    REQUIRE(result == expected);
+}
