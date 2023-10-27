@@ -14,7 +14,7 @@
 template<class T>
 void Stack<T>::push(T newItem)
 {
-    myStack.pushR(newItem);
+   myStack.pushR(newItem);
 }
 
 /**
