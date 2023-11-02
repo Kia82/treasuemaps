@@ -68,13 +68,6 @@ PNG decoder::renderSolution(){
 PNG decoder::renderMaze(){
    PNG mazeImg = mapImg; 
 
-    // // darken pixels
-    // for (unsigned int x = 0; x < mazeImg.width(); x++) {
-    //     for (unsigned int y = 0; y < mazeImg.height(); y++) {
-    //         setGrey(mazeImg, make_pair(x, y));
-    //     }
-    // }
-
     vector<vector<bool>> v(mazeImg.width(), vector<bool>(mazeImg.height(), false));
     vector<vector<int>> distance(mazeImg.width(), vector<int>(mazeImg.height(), 0));
 
@@ -136,9 +129,6 @@ int decoder::pathLength(){
    return pathPts.size();
 }
 
-// following a Piazza post: https://piazza.com/class/llr7641o5bq57w/post/951 I changed this function a bit. It made one more test pass BUT
-// i am not 100% sure if this function completely works yet because the output images are still basically the exact same (almost exactly 
-// like the piazza posts').
 vector<pair<int,int>> decoder::neighbors(pair<int,int> curr) {
     vector<pair<int,int>> neighborList;
     
