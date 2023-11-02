@@ -24,6 +24,7 @@ decoder::decoder(const PNG & tm, pair<int,int> s)
 
         for (pair<int, int> neighbor : neighbors(current)) {
             if (good(visited, distance, current, neighbor)) {
+
                 visited[neighbor.first][neighbor.second] = true;
                 distance[neighbor.first][neighbor.second] = distance[current.first][current.second] + 1;
                 predecessor[neighbor.first][neighbor.second] = current;
@@ -67,11 +68,37 @@ PNG decoder::renderSolution(){
 PNG decoder::renderMaze(){
    PNG mazeImg = mapImg; 
 
-    // darken pixels
-    for (unsigned int x = 0; x < mazeImg.width(); x++) {
-        for (unsigned int y = 0; y < mazeImg.height(); y++) {
-            setGrey(mazeImg, make_pair(x, y));
+    // // darken pixels
+    // for (unsigned int x = 0; x < mazeImg.width(); x++) {
+    //     for (unsigned int y = 0; y < mazeImg.height(); y++) {
+    //         setGrey(mazeImg, make_pair(x, y));
+    //     }
+    // }
+
+    vector<vector<bool>> v(mazeImg.width(), vector<bool>(mazeImg.height(), false));
+    vector<vector<int>> distance(mazeImg.width(), vector<int>(mazeImg.height(), 0));
+
+    Queue<pair<int,int>> q;
+
+    q.enqueue(start);
+    v[start.first][start.second] = true;
+    distance[start.first][start.second] = 0;
+
+    while(!q.isEmpty()) {
+        pair<int, int> curr = q.dequeue();
+        vector<pair<int, int>> n = neighbors(curr);
+
+        for(auto p : n) {
+            if(good(v, distance, curr, p)) {
+                setGrey(mazeImg, p);
+                distance[p.first][p.second] = distance[curr.first][curr.second] + 1;
+                v[p.first][p.second] = true;
+                 q.enqueue(p);
+            }
         }
+
+
+
     }
 
     // 7x7 red square 
@@ -93,9 +120,9 @@ PNG decoder::renderMaze(){
 
 void decoder::setGrey(PNG & im, pair<int,int> loc){
    RGBAPixel* pixel = im.getPixel(loc.first, loc.second);
-   pixel->r = pixel->r * 0.5;
-   pixel->g = pixel->g * 0.5;
-   pixel->b = pixel->b * 0.5;
+   pixel->r = 2* (pixel->r/4);  
+   pixel->g = 2* (pixel->g/4);
+   pixel->b = 2* (pixel->b/4);
 }
 
 
