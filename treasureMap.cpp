@@ -4,15 +4,14 @@ using namespace std;
 
 treasureMap::treasureMap(const PNG & baseim, const PNG & mazeim, pair<int,int> s)
 {
+
     base = baseim;
     maze = mazeim;
     start = s;
 
-
 }
 
 void treasureMap::setGrey(PNG & im, pair<int,int> loc){
-
 
     RGBAPixel *pixel = im.getPixel(loc.first, loc.second);
     
@@ -20,9 +19,13 @@ void treasureMap::setGrey(PNG & im, pair<int,int> loc){
     pixel->g = 2*(pixel->g/4);
     pixel->b = 2*(pixel->b/4);
 
+
 }
 
 void treasureMap::setLOB(PNG & im, pair<int,int> loc, int d){
+    RGBAPixel * p = im.getPixel(loc.first, loc.second);
+    int dmod = d % 64;
+
 
     RGBAPixel *pixel = im.getPixel(loc.first, loc.second);
     int r = pixel->r;
@@ -33,8 +36,6 @@ void treasureMap::setLOB(PNG & im, pair<int,int> loc, int d){
     pixel->r = (r & 0xFC) | ((d_mod_64 >> 4) & 0x3);
     pixel->g = (g & 0xFC) | ((d_mod_64 >> 2) & 0x3);
     pixel->b = (b & 0xFC) | (d_mod_64  & 0x3);
-
-
 
 
 }
@@ -64,6 +65,7 @@ PNG treasureMap::renderMap() {
     while (!q.isEmpty()) {
         pair<int,int> curr = q.peek();
          q.dequeue();
+
 
         vector<pair<int,int>> adj = neighbors(curr); 
 
@@ -147,12 +149,12 @@ bool treasureMap::good(vector<vector<bool>> & v, pair<int,int> curr, pair<int,in
 
     // all checks passed, 'next' is a good pixel
     return true;
-
-
 }
+
 
 vector<pair<int,int>> treasureMap::neighbors(pair<int,int> curr) {
     vector<pair<int,int>> n;
+
     n.push_back(make_pair(curr.first, curr.second - 1));   // north
     n.push_back(make_pair(curr.first + 1, curr.second));   // east
     n.push_back(make_pair(curr.first, curr.second + 1));   // south
