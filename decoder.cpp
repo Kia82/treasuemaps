@@ -109,12 +109,17 @@ int decoder::pathLength(){
    return pathPts.size();
 }
 
+// following a Piazza post: https://piazza.com/class/llr7641o5bq57w/post/951 I changed this function a bit. It made one more test pass BUT
+// i am not 100% sure if this function completely works yet because the output images are still basically the exact same (almost exactly 
+// like the piazza posts').
 vector<pair<int,int>> decoder::neighbors(pair<int,int> curr) {
-   vector<pair<int,int>> neighborList;
+    vector<pair<int,int>> neighborList;
+    
     neighborList.push_back(make_pair(curr.first-1, curr.second));   // left
+    neighborList.push_back(make_pair(curr.first, curr.second+1));   // below (down)
     neighborList.push_back(make_pair(curr.first+1, curr.second));   // right
-    neighborList.push_back(make_pair(curr.first, curr.second-1));   // up
-    neighborList.push_back(make_pair(curr.first, curr.second+1));   // down
+    neighborList.push_back(make_pair(curr.first, curr.second-1));   // above (up)
+    
     return neighborList;
 }
 
