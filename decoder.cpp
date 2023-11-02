@@ -16,7 +16,7 @@ decoder::decoder(const PNG & tm, pair<int,int> s)
     visited[start.first][start.second] = true;
     distance[start.first][start.second] = 0;
 
-    pair<int, int> last = start; // furthest point
+    pair<int, int> last = start; // to keep track of the furthest point
 
     while (!bfsQueue.isEmpty()) {
         pair<int, int> current = bfsQueue.peek();
@@ -28,18 +28,22 @@ decoder::decoder(const PNG & tm, pair<int,int> s)
                 distance[neighbor.first][neighbor.second] = distance[current.first][current.second] + 1;
                 predecessor[neighbor.first][neighbor.second] = current;
                 bfsQueue.enqueue(neighbor);
-                last = neighbor; // update the furthest point
+                last = neighbor; // update the furthest point.
             }
         }
     }
 
     // backtrack from the furthest point to start using the predecessor matrix to populate pathPts
+    
     while (last != start) {
         pathPts.push_back(last);
         last = predecessor[last.first][last.second];
     }
+
+    
     pathPts.push_back(start);
     reverse(pathPts.begin(), pathPts.end());
+
 }
 
     
@@ -57,6 +61,7 @@ PNG decoder::renderSolution(){
 
     return solutionImg;
 }
+
 
 
 PNG decoder::renderMaze(){
@@ -122,28 +127,24 @@ bool decoder::compare(RGBAPixel p, int d){
 
 
 
-bool decoder::good(vector<vector<bool>> & v, vector<vector<int>> & d, pair<int,int> curr, pair<int,int> next){
+bool decoder::good(vector<vector<bool>> & v, vector<vector<int>> & d, pair<int,int> curr, pair<int,int> next) {
+    // boundary Check
     if (next.first < 0 || next.second < 0 || next.first >= mapImg.width() || next.second >= mapImg.height()) {
         return false;
     }
-
+    // visited Check
     if (v[next.first][next.second]) {
-        return false;  // if the location already visited.
+        return false;
     }
-
+    // maze-distance check
     RGBAPixel& currPixel = *mapImg.getPixel(curr.first, curr.second);
     RGBAPixel& nextPixel = *mapImg.getPixel(next.first, next.second);
+    int mazeValueCurr = (currPixel.r % 4) * 16 + (currPixel.g % 4) * 4 + currPixel.b % 4;
+    int mazeValueNext = (nextPixel.r % 4) * 16 + (nextPixel.g % 4) * 4 + nextPixel.b % 4;
+    int distance = (mazeValueNext - mazeValueCurr + 64) % 64; // +64 and %64 ensure positive modulo
 
-    int currValue = d[curr.first][curr.second]; 
-    int nextValue = (nextPixel.r % 4) * 16 + (nextPixel.g % 4) * 4 + nextPixel.b % 4;
-
-    int distance = abs(currValue - nextValue);
-
-    if (distance == 1 || distance == 63) {  // valid maze distance
-        return true;
-    }
-    
-    return false;
+    return distance == 1;
 }
+
 
 
